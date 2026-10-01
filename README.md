@@ -62,7 +62,8 @@ The Android project, application source, API contracts, runtime configuration, s
 
 ## Links
 
-- Portfolio case study: pending website publication; planned route `/work/android-networking`.
+- [Portfolio](https://elisey.kochura.com).
+- [Portfolio case study](https://elisey.kochura.com/work/android-networking).
 - [Elisey Kochura on GitHub](https://github.com/lolpul).
 
 *Documentation reviewed: 1 October 2026.*
