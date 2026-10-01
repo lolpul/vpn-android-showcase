@@ -1,9 +1,12 @@
-# VPN Android
+# Android Networking
 
-**Native Android / Kotlin / Networking**
+A native Kotlin/Compose networking application under active development.
+
+[Portfolio case study](https://elisey.kochura.com/work/android-networking) · [Portfolio](https://elisey.kochura.com)
+
 An engineering overview by [Elisey Kochura](https://github.com/lolpul).
 
-## Project overview
+## Overview
 
 A native Android networking application that connects a mobile interface with backend services and Android's VPN lifecycle. The work spans UI state, asynchronous requests, local state persistence and the boundaries between an application screen and a longer-lived platform service.
 
@@ -53,6 +56,14 @@ The private source includes unit tests around repositories, mappings, startup co
 ## Screenshots
 
 No reviewed screenshot set is included in this edition. The architecture illustration is conceptual; it is not a fabricated product screenshot.
+
+## Stack
+
+Kotlin · Android · Jetpack Compose · Coroutines / StateFlow · Retrofit / OkHttp · DataStore
+
+## Current status
+
+Active development. No public app-store release or fully released end-to-end service is claimed.
 
 ## Source availability
 
