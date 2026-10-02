@@ -7,3 +7,7 @@
 *.p12
 *.pfx
 credentials*
+
+.gradle/
+.kotlin/
+build/

@@ -1,17 +1,13 @@
-# Showcase documentation memory — v3
+# Kotlin showcase memory - v4
 
-- Purpose: public engineering overview of VPN Android, with independently written prose and a conceptual diagram.
-- Canonical content: [README](../README.md) and [architecture illustration](architecture.svg).
-- Scope: documentation only. Application source and operational configuration remain private.
-- Stage constraint: Native Android client under development; no app-store release or full-service availability claim.
-- Publication checks: review every tracked file; permit only this documentation set; check for sensitive values, private URLs, identifying user data, source code and infrastructure details.
-- Screenshots: none included or cleared for this edition.
-- Links: portfolio and case study are published and verified over trusted HTTPS; README now links to both.
-- Last verified: homepage and case study HTTP 200 on 2026-10-01; links added only after publication. No product source or operational information added.
-- Maintenance: keep claims tied to confirmed project evidence, preserve the private-source boundary and review future changes before push.
-- Record: [initial overview](patches/2026-10-01-public-overview.md).
-- Update: [published portfolio links](patches/2026-10-01-portfolio-links.md).
-
-- Profile integration: README opens with a one-line summary and public backlinks; explicit Stack and Current status sections. Repository description/homepage/topics are recorded in `repository-metadata.json`.
-- Profile: https://github.com/lolpul; original source remains private.
-- Latest patch: [public profile coherence](patches/2026-10-01-profile-coherence.md).
+- Purpose: independent Kotlin/JVM state holder demonstrating Android architecture concerns without Android runtime.
+- Repository: https://github.com/lolpul/vpn-android-showcase. Private application remains private and under active development.
+- Entry: examples/ui-state/src/main/kotlin/example/state/{ConnectionModel,ConnectionState,ConnectionRepository}.kt; tests adjacent under src/test.
+- Contracts: single UI-dispatcher confinement; authoritative lookup determines preparation; cached hints never imply connected; explicit operation acknowledgement determines Connected.
+- Lifetime: replace/cancel old work; revision and active-job guards reject stale results; cancellation rethrows; shutdown cancels and joins all owned workers. No actual connection control.
+- Build: JDK 21, Gradle 8.13 wrapper with official checksum, Kotlin 2.2.21, coroutines 1.10.2. Command: gradlew.bat --no-daemon test (Windows), ./gradlew --no-daemon test (Linux).
+- Verified: all 11 JVM tests passed on Windows, including parent lifecycle cancellation. Public CI and publication acceptance follow scan/manual diff.
+- Audit: observable state, repository boundaries, startup reconciliation, expiry and restored-ready distinction confirmed. Private stale README corrected separately; no private build or device validation claimed.
+- No private source/history/configuration imported. Local source receipts and backups are ignored.
+- Docs: [scope](spec.md), [interview notes](interview-notes.md), [patch](patches/2026-10-02-kotlin-state.md).
+- Next: verify final tests, confidentiality review, push and exact-revision Actions, then website/profile code evidence.

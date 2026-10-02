@@ -1,80 +1,55 @@
 # Android Networking
 
-A native Kotlin/Compose networking application under active development.
+An independent Kotlin/JVM example of observable UI state, coroutine lifecycle ownership, and startup reconciliation.
 
-[Portfolio case study](https://elisey.kochura.com/work/android-networking) · [Portfolio](https://elisey.kochura.com)
+## What this demonstrates
 
-An engineering overview by [Elisey Kochura](https://github.com/lolpul).
-
-## Overview
-
-A native Android networking application that connects a mobile interface with backend services and Android's VPN lifecycle. The work spans UI state, asynchronous requests, local state persistence and the boundaries between an application screen and a longer-lived platform service.
-
-**Stage:** Android client under active development. The repository reviewed contains application and integration components; this overview does not claim a public app-store release or a fully released end-to-end service.
-
-The engineering problem is to present understandable application state while remote operations and platform lifecycle events happen independently of what is currently on screen.
-
-## My role
-
-I develop the Kotlin application, its Compose interface, state management and backend integration. My work also covers persistence, startup/session reconciliation and the integration boundary around Android's VPN service.
-
-## Engineering scope
-
-- Kotlin and native Android development.
-- Jetpack Compose UI and ViewModel-based state management.
-- Coroutines and StateFlow for asynchronous work and observable state.
-- Retrofit / OkHttp backend integration.
-- DataStore for local state persistence.
-- Android VpnService lifecycle integration.
-- Unit tests around state transitions, repository behavior and startup coordination.
+A sealed state model, read-only StateFlow, a repository boundary, cancellable operations, stale-result protection, and explicit worker shutdown. It extracts general architecture concerns from an Android application under active development. It contains no VPN runtime or Android dependency.
 
 ## Architecture
 
-![Conceptual Android UI, state and domain logic, backend integration and platform-service responsibilities](docs/architecture.svg)
+![Conceptual Android application responsibilities](docs/architecture.svg)
 
-Compose screens observe state managed outside the UI. Repository boundaries connect application behavior to backend operations and persistence. Android platform-service responsibilities are kept separate from screen composition. The diagram omits API schemas, private endpoints and the networking runtime's implementation.
+In the private application, Compose observes a ViewModel, repositories handle remote/persistence boundaries, and startup reconciliation checks current authority. In this public example, a platform-neutral ConnectionModel owns jobs and observable state. An Android ViewModel could own it and supply its UI dispatcher/lifecycle; this JVM class is deliberately not an AndroidX ViewModel subclass. Compose, DataStore, and VpnService are not implemented here.
+
+## Code examples
+
+Read [ConnectionModel.kt](examples/ui-state/src/main/kotlin/example/state/ConnectionModel.kt), [ConnectionState.kt](examples/ui-state/src/main/kotlin/example/state/ConnectionState.kt), and [ConnectionRepository.kt](examples/ui-state/src/main/kotlin/example/state/ConnectionRepository.kt). [Tests and fakes](examples/ui-state/src/test/kotlin/example/state/ConnectionModelTest.kt) run without an emulator or service.
+
+The holder starts Loading, queries a synthetic authoritative preparation record, and transitions to Ready or Disconnected. Ready means preparation exists and has not expired. Only an explicit successful operation produces Connected. CachedHint represents persisted metadata and never establishes current connection state.
 
 ## Engineering decisions
 
-| Problem | Decision | Reason / trade-off |
-| --- | --- | --- |
-| Network operations should not make screen composition responsible for business logic. | Keep observable state and actions in ViewModel/StateFlow boundaries. | Make state transitions explicit and testable; state ownership needs to stay consistent across screens. |
-| Backend response and error details can otherwise leak through the interface. | Use repository abstractions and map remote results into application-level models. | Keep the UI focused on user-facing behavior; maintain a deliberate mapping layer. |
-| Local state may no longer match the backend after an application restart. | Combine persisted metadata with startup/session reconciliation. | Restore context without treating cached state as current authority; startup includes additional asynchronous coordination. |
+All actions and callbacks are confined to one single-thread UI dispatcher. Each replacement operation cancels its predecessor and increments a revision; superseded or cancelled results cannot update state or cached hints. Expected repository failures become Unavailable; CancellationException is rethrown. StateFlow exposes the latest state and can conflate rapid updates; it is not an event log.
 
-## Challenges
+Cancellation has its own state because requesting cancellation does not prove an external connection stopped. Shutdown cancels and joins owned workers, after which actions are ignored. This example does not control a platform service. See [interview notes](docs/interview-notes.md) and [scope](docs/spec.md).
 
-- Representing loading, success and error states without blocking the main thread.
-- Coordinating local state with asynchronous backend results.
-- Handling cancellation and Android lifecycle changes.
-- Keeping VPN service ownership and cleanup outside UI composables.
+## Failure handling
 
-## Validation approach
+Lookup failures are not replaced by cached success. Missing/expired preparation clears the hint. Duplicate connect clicks while an operation is pending are rejected. Cancelled work must unwind partial resources in its adapter. A faulty late result cannot overwrite newer intent. Expected failures must be translated at the repository boundary; unexpected programming defects are not disguised as ordinary unavailability.
 
-The private source includes unit tests around repositories, mappings, startup coordination and UI state. This overview documents implemented architectural boundaries, not device certification or production performance results.
+## Tests
 
-## Screenshots
+JDK 21, Gradle 8.13, Kotlin 2.2.21, and coroutines 1.10.2:
 
-No reviewed screenshot set is included in this edition. The architecture illustration is conceptual; it is not a fabricated product screenshot.
+```sh
+./gradlew --no-daemon test
+```
 
-## Stack
+On Windows use `gradlew.bat --no-daemon test`. The wrapper is generated from official Gradle tooling and pins the distribution SHA-256.
 
-Kotlin · Android · Jetpack Compose · Coroutines / StateFlow · Retrofit / OkHttp · DataStore
+[GitHub Actions](https://github.com/lolpul/vpn-android-showcase/actions/workflows/kotlin.yml) runs JVM unit tests. Tests cover initial state, success/failure, cancellation cleanup, parent lifecycle cancellation, expiry, restart reconciliation, observed transition ordering, superseded requests, and shutdown. Coroutine test scheduling and fakes make these checks deterministic; no sleeps or network services are used.
 
-## Current status
+## Limitations
 
-Active development. No public app-store release or fully released end-to-end service is claimed.
+This is a ViewModel-style state holder, not a complete Android application or real networking client. It does not validate Compose rendering, process death, device APIs, persistent storage, backend integration, or VPN connectivity. Callers must obey dispatcher confinement; it is not an arbitrary-thread concurrency API. Cancellation remains cooperative, and shutdown can wait for uncooperative work. The fake preparation and cached hint are distinct from any private session/schema. There is no app-store, production, device, throughput, or full-service claim.
 
-## Source availability
+## Relation to private project
 
-The production source code is maintained in a private repository. This repository contains a public engineering overview only.
+Read-only source/test review confirmed observable state, repository isolation, owned coroutines, startup authority checks, stale-cache replacement, and restored metadata not being a running connection. A stale private scaffold-only README was corrected from tree evidence; private builds/device tests were not rerun for that documentation change.
 
-The Android project, application source, API contracts, runtime configuration, signing materials and private service details are not published here. This documentation does not grant a license to the closed-source application.
+This public module was independently written with new names, models, interfaces, and tests. No original file, endpoint, protocol, runtime configuration, auth flow, identifier, signing material, integration, or Git history was transferred. Prepared with AI assistance and reproducible host tests; no license to the private application is granted.
 
-## Links
+## Portfolio
 
-- [Portfolio](https://elisey.kochura.com).
-- [Portfolio case study](https://elisey.kochura.com/work/android-networking).
-- [Elisey Kochura on GitHub](https://github.com/lolpul).
-
-*Documentation reviewed: 1 October 2026.*
+[Case study](https://elisey.kochura.com/work/android-networking) | [Portfolio](https://elisey.kochura.com) | [GitHub profile](https://github.com/lolpul)

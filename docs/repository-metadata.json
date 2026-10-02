@@ -1,5 +1,5 @@
 {
-  "description": "Public engineering overview of a native Android networking application under active development.",
+  "description": "Independent Kotlin/JVM UI state, cancellation and startup reconciliation example with deterministic tests.",
   "homepage": "https://elisey.kochura.com/work/android-networking",
   "topics": [
     "android",
