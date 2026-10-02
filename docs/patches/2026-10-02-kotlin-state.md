@@ -19,3 +19,7 @@ The stale private README was corrected separately from source-tree evidence. Pri
 ## Rollback and remaining limits
 
 Original public main: `49ca3890f7f075692c43cdeacc8472bf1013977b`. Timestamped ignored backups and manifest cover changed existing files and the vault note. Rollback through normal revert; no force push. Thread confinement and cooperative adapter cancellation are contracts; late-result guards do not undo external side effects. No physical, network, production-service or original application change was made by this public patch.
+
+## Publication acceptance
+
+Implementation `10c9b116a91cd499b22ee7a81da228cd2acdf9c1` pushed to public main. [Actions 37052359044](https://github.com/lolpul/vpn-android-showcase/actions/runs/37052359044) passed the Linux Gradle/JDK 21 build and all 11 JVM tests. Official wrapper checksums and whitespace checks pass.
