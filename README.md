@@ -2,6 +2,10 @@
 
 An independent Kotlin/JVM example of observable UI state, coroutine lifecycle ownership, and startup reconciliation.
 
+## Review in 30 seconds
+
+The engineering question is how to keep cached or late results from becoming current UI truth. Read [the state holder](examples/ui-state/src/main/kotlin/example/state/ConnectionModel.kt), [sealed states](examples/ui-state/src/main/kotlin/example/state/ConnectionState.kt) and [the repository contract](examples/ui-state/src/main/kotlin/example/state/ConnectionRepository.kt). [Deterministic tests](examples/ui-state/src/test/kotlin/example/state/ConnectionModelTest.kt) and [latest verification](docs/verification.md) make the lifecycle assumptions reviewable.
+
 ## What this demonstrates
 
 A sealed state model, read-only StateFlow, a repository boundary, cancellable operations, stale-result protection, and explicit worker shutdown. It extracts general architecture concerns from an Android application under active development. It contains no VPN runtime or Android dependency.

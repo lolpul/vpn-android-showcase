@@ -1,13 +1,14 @@
-# Kotlin showcase memory - v4
+# Project memory — v5, 2026-10-10
 
-- Purpose: independent Kotlin/JVM state holder demonstrating Android architecture concerns without Android runtime.
-- Repository: https://github.com/lolpul/vpn-android-showcase. Private application remains private and under active development.
-- Entry: examples/ui-state/src/main/kotlin/example/state/{ConnectionModel,ConnectionState,ConnectionRepository}.kt; tests adjacent under src/test.
-- Contracts: single UI-dispatcher confinement; authoritative lookup determines preparation; cached hints never imply connected; explicit operation acknowledgement determines Connected.
-- Lifetime: replace/cancel old work; revision and active-job guards reject stale results; cancellation rethrows; shutdown cancels and joins all owned workers. No actual connection control.
-- Build: JDK 21, Gradle 8.13 wrapper with official checksum, Kotlin 2.2.21, coroutines 1.10.2. Command: gradlew.bat --no-daemon test (Windows), ./gradlew --no-daemon test (Linux).
-- Verified: all 11 JVM tests passed on Windows and Linux, including parent lifecycle cancellation. [Actions 37052359044](https://github.com/lolpul/vpn-android-showcase/actions/runs/37052359044) accepted implementation 10c9b116a91cd499b22ee7a81da228cd2acdf9c1.
-- Audit: observable state, repository boundaries, startup reconciliation, expiry and restored-ready distinction confirmed. Private stale README corrected separately; no private build or device validation claimed.
-- No private source/history/configuration imported. Local source receipts and backups are ignored.
-- Docs: [scope](spec.md), [interview notes](interview-notes.md), [patch](patches/2026-10-02-kotlin-state.md).
-- Next: public examples accepted with automated inventory/manual confidentiality review; add 3D README highlights, profile links and website code evidence.
+- Purpose: Independent Kotlin/JVM state holder, revision/cancellation guards and joined shutdown.
+- Repository: https://github.com/lolpul/vpn-android-showcase, PUBLIC, main; review branch portfolio-review-2026-10-10. Use git log/PR for delivery SHA.
+- Entry: README Review in 30 seconds → key implementation files/tests; existing architecture and deeper decisions retained.
+- Run/test commands: README and [dated verification](verification.md), checked during this review.
+- Verified: JDK21/Gradle8.13 compilation and 11 deterministic tests passed; no Android runtime/device tests.
+- Limits: No Compose/AndroidX/VpnService/actual VPN; single-thread dispatcher confinement required.
+- Changes: review navigation, honest maturity/validation wording, reproducible demonstration notes and this compact memory. Application algorithms/tests/workflows unchanged; 3D package description corrected to MVP.
+- Existing public portfolio integration was accepted 2026-10-02; no site deployment or production/network change in this review.
+- IP: no private original files/history, configuration, identifiers or working data transferred. New code/visibility/license/history changes require separate owner decision.
+- Backup: central ignored career-materials/.backups/github-review-20261010-015431 manifest; published-doc rollback via ordinary revert; unrelated files preserved.
+- Next: use these source/test paths for interviews; address documented integration/security/rights gaps through separate scoped work.
+- Patch: [portfolio review](patches/2026-10-10-portfolio-review.md).
